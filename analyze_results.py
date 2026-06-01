@@ -1,8 +1,32 @@
+"""
+---
+Project: Bin Packing Algorithm Analysis
+Author: Andrés Cerdas Padilla
+GitHub: https://github.com/Andrescpyo
+
+Description:
+Results analysis module for bin packing experiments.
+Computes summary statistics and rankings for algorithm performance.
+---
+
+Module: analyze_results
+"""
+
 import pandas as pd
 
 
 def main():
+    """
+    Analyze experiment results and generate summary statistics.
 
+    Reads results.csv, computes average gap, time, and optimal solution counts
+    for each algorithm, then prints rankings and best performers.
+    Saves summary to summary.csv.
+
+    Side effects:
+        - Prints analysis results to console
+        - Creates summary.csv file
+    """
     try:
         df = pd.read_csv("results\\results.csv")
 
@@ -49,16 +73,13 @@ def main():
     print(summary_df.to_string(index=False))
 
     summary_df.to_csv(
-        "summary.csv",
+        "results/summary.csv",
         index=False
     )
 
     print("\nsummary.csv generado correctamente.")
 
-    # --------------------------------------------------
     # Mejor método por GAP
-    # --------------------------------------------------
-
     best_gap = summary_df.loc[
         summary_df["Avg Gap (%)"].idxmin()
     ]
@@ -72,10 +93,7 @@ def main():
         f"(Gap promedio = {best_gap['Avg Gap (%)']}%)"
     )
 
-    # --------------------------------------------------
     # Método con más óptimos
-    # --------------------------------------------------
-
     best_optimal = summary_df.loc[
         summary_df["Optimal Solutions"].idxmax()
     ]
@@ -89,10 +107,7 @@ def main():
         f"({best_optimal['Optimal Solutions']} óptimos)"
     )
 
-    # --------------------------------------------------
     # Ranking por GAP
-    # --------------------------------------------------
-
     ranking = summary_df.sort_values(
         by="Avg Gap (%)"
     )

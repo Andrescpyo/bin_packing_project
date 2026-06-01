@@ -1,9 +1,27 @@
+/**
+ * ---
+ * Project: Bin Packing Algorithm Analysis
+ * Author: Andrés Cerdas Padilla
+ * GitHub: https://github.com/Andrescpyo
+ *
+ * Description:
+ * Frontend application for bin packing results visualization.
+ * Handles API communication, chart rendering, and user interactions.
+ * ---
+ */
+
 // Global variables
 let resultsData = [];
 let summaryData = [];
 let charts = {};
 
 // API calls
+
+/**
+ * Fetch detailed experiment results from the API.
+ *
+ * @returns {Promise<Array>} Array of result objects with metrics for each instance and algorithm.
+ */
 async function fetchResults() {
     try {
         const response = await fetch('/api/results');
@@ -16,6 +34,11 @@ async function fetchResults() {
     }
 }
 
+/**
+ * Fetch summary statistics from the API.
+ *
+ * @returns {Promise<Array>} Array of summary objects with average gap, time, and optimal solution counts.
+ */
 async function fetchSummary() {
     try {
         const response = await fetch('/api/summary');
@@ -28,6 +51,11 @@ async function fetchSummary() {
     }
 }
 
+/**
+ * Fetch list of available instance files from the API.
+ *
+ * @returns {Promise<Array>} Array of instance objects with name, size, and optimal value.
+ */
 async function fetchInstances() {
     try {
         const response = await fetch('/api/instances');
@@ -39,6 +67,11 @@ async function fetchInstances() {
     }
 }
 
+/**
+ * Fetch list of available algorithms from the API.
+ *
+ * @returns {Promise<Array>} Array of algorithm names (e.g., ['NF', 'FF', 'BF', 'FFD', 'PROP']).
+ */
 async function fetchAlgorithms() {
     try {
         const response = await fetch('/api/algorithms');
@@ -51,19 +84,24 @@ async function fetchAlgorithms() {
 }
 
 // Navigation
+
+/**
+ * Initialize sidebar navigation handlers.
+ * Switches between dashboard sections and loads appropriate data.
+ */
 document.querySelectorAll('.sidebar-item').forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
         const section = item.dataset.section;
-        
+
         // Update active state
         document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
-        
+
         // Show section
         document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
         document.getElementById(section).classList.remove('hidden');
-        
+
         // Load data for section
         if (section === 'comparison') {
             loadComparisonCharts();
@@ -74,12 +112,17 @@ document.querySelectorAll('.sidebar-item').forEach(item => {
 });
 
 // Dashboard KPIs
+
+/**
+ * Update dashboard KPI cards with summary statistics.
+ * Displays best algorithm, average gap, average time, and optimal solutions count.
+ */
 function updateKPIs() {
     if (summaryData.length === 0) return;
-    
+
     const bestByGap = summaryData.reduce((a, b) => a['Avg Gap (%)'] < b['Avg Gap (%)'] ? a : b);
     const bestByOptimal = summaryData.reduce((a, b) => a['Optimal Solutions'] > b['Optimal Solutions'] ? a : b);
-    
+
     document.getElementById('best-algorithm').textContent = bestByGap.Method;
     document.getElementById('avg-gap').textContent = bestByGap['Avg Gap (%)'] + '%';
     document.getElementById('avg-time').textContent = bestByGap['Avg Time (s)'].toFixed(4) + 's';
@@ -87,11 +130,15 @@ function updateKPIs() {
 }
 
 // Charts
+
+/**
+ * Create bar chart showing average gap percentage by algorithm.
+ */
 function createGapChart() {
     const ctx = document.getElementById('gapChart').getContext('2d');
-    
+
     if (charts.gap) charts.gap.destroy();
-    
+
     charts.gap = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -129,11 +176,14 @@ function createGapChart() {
     });
 }
 
+/**
+ * Create bar chart showing average execution time by algorithm.
+ */
 function createTimeChart() {
     const ctx = document.getElementById('timeChart').getContext('2d');
-    
+
     if (charts.time) charts.time.destroy();
-    
+
     charts.time = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -171,11 +221,14 @@ function createTimeChart() {
     });
 }
 
+/**
+ * Create bar chart showing optimal solutions count by algorithm.
+ */
 function createOptimalChart() {
     const ctx = document.getElementById('optimalChart').getContext('2d');
-    
+
     if (charts.optimal) charts.optimal.destroy();
-    
+
     charts.optimal = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -213,16 +266,20 @@ function createOptimalChart() {
     });
 }
 
+/**
+ * Create radar chart showing multidimensional performance comparison.
+ * Normalizes gap, time, and optimal solutions for visualization.
+ */
 function createRadarChart() {
     const ctx = document.getElementById('radarChart').getContext('2d');
-    
+
     if (charts.radar) charts.radar.destroy();
-    
+
     // Normalize data for radar chart
     const maxGap = Math.max(...summaryData.map(d => d['Avg Gap (%)']));
     const maxTime = Math.max(...summaryData.map(d => d['Avg Time (s)']));
     const maxOptimal = Math.max(...summaryData.map(d => d['Optimal Solutions']));
-    
+
     const datasets = summaryData.map((d, i) => ({
         label: d.Method,
         data: [
@@ -246,7 +303,7 @@ function createRadarChart() {
         ][i],
         borderWidth: 2
     }));
-    
+
     charts.radar = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -266,16 +323,20 @@ function createRadarChart() {
     });
 }
 
+/**
+ * Load comparison charts for the comparison section.
+ * Creates line charts showing gap and time across all instances.
+ */
 function loadComparisonCharts() {
     if (resultsData.length === 0) return;
-    
+
     const algorithms = ['NF', 'FF', 'BF', 'FFD', 'PROP'];
     const instances = resultsData.map(d => d.Instance);
-    
+
     // Gap comparison chart
     const gapCtx = document.getElementById('comparisonGapChart').getContext('2d');
     if (charts.comparisonGap) charts.comparisonGap.destroy();
-    
+
     charts.comparisonGap = new Chart(gapCtx, {
         type: 'line',
         data: {
@@ -311,11 +372,11 @@ function loadComparisonCharts() {
             }
         }
     });
-    
+
     // Time comparison chart
     const timeCtx = document.getElementById('comparisonTimeChart').getContext('2d');
     if (charts.comparisonTime) charts.comparisonTime.destroy();
-    
+
     charts.comparisonTime = new Chart(timeCtx, {
         type: 'line',
         data: {
@@ -354,10 +415,15 @@ function loadComparisonCharts() {
 }
 
 // Data table
+
+/**
+ * Load and populate the data table with experiment results.
+ * Displays detailed metrics for each instance and algorithm.
+ */
 function loadDataTable() {
     const tbody = document.getElementById('results-body');
     tbody.innerHTML = '';
-    
+
     resultsData.forEach(row => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-gray-50';
@@ -380,10 +446,15 @@ function loadDataTable() {
 }
 
 // Search functionality
+
+/**
+ * Initialize search functionality for the data table.
+ * Filters table rows based on user input.
+ */
 document.getElementById('search-input').addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const rows = document.querySelectorAll('#results-body tr');
-    
+
     rows.forEach(row => {
         const text = row.textContent.toLowerCase();
         row.style.display = text.includes(searchTerm) ? '' : 'none';
@@ -391,12 +462,17 @@ document.getElementById('search-input').addEventListener('input', (e) => {
 });
 
 // Export CSV
+
+/**
+ * Initialize CSV export functionality.
+ * Downloads the current results data as a CSV file.
+ */
 document.getElementById('export-csv').addEventListener('click', () => {
     const csv = [
         Object.keys(resultsData[0]).join(','),
         ...resultsData.map(row => Object.values(row).join(','))
     ].join('\n');
-    
+
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -406,10 +482,15 @@ document.getElementById('export-csv').addEventListener('click', () => {
 });
 
 // Execution panel
+
+/**
+ * Load execution panel with available instances and algorithms.
+ * Populates checkboxes for user selection.
+ */
 async function loadExecutionPanel() {
     const instances = await fetchInstances();
     const algorithms = await fetchAlgorithms();
-    
+
     // Load instances
     const instancesList = document.getElementById('instances-list');
     instancesList.innerHTML = '';
@@ -423,7 +504,7 @@ async function loadExecutionPanel() {
         `;
         instancesList.appendChild(div);
     });
-    
+
     // Load algorithms
     const algorithmsList = document.getElementById('algorithms-list');
     algorithmsList.innerHTML = '';
@@ -436,30 +517,35 @@ async function loadExecutionPanel() {
         `;
         algorithmsList.appendChild(div);
     });
-    
+
     // Select all / Deselect all
     document.getElementById('select-all-instances').addEventListener('click', () => {
         document.querySelectorAll('.instance-checkbox').forEach(cb => cb.checked = true);
     });
-    
+
     document.getElementById('deselect-all-instances').addEventListener('click', () => {
         document.querySelectorAll('.instance-checkbox').forEach(cb => cb.checked = false);
     });
 }
 
 // Run experiments
+
+/**
+ * Initialize experiment execution handler.
+ * Sends selected instances and algorithms to the API for processing.
+ */
 document.getElementById('run-experiments').addEventListener('click', async () => {
     const selectedInstances = Array.from(document.querySelectorAll('.instance-checkbox:checked')).map(cb => cb.value);
     const selectedAlgorithms = Array.from(document.querySelectorAll('.algorithm-checkbox:checked')).map(cb => cb.value);
-    
+
     if (selectedInstances.length === 0 || selectedAlgorithms.length === 0) {
         alert('Por favor selecciona al menos una instancia y un algoritmo');
         return;
     }
-    
+
     const statusDiv = document.getElementById('execution-status');
     statusDiv.classList.remove('hidden');
-    
+
     try {
         const response = await fetch('/api/run-experiments', {
             method: 'POST',
@@ -469,9 +555,9 @@ document.getElementById('run-experiments').addEventListener('click', async () =>
                 algorithms: selectedAlgorithms
             })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             resultsData = result.results;
             summaryData = result.summary;
@@ -492,10 +578,15 @@ document.getElementById('run-experiments').addEventListener('click', async () =>
 });
 
 // Initialize
+
+/**
+ * Initialize the application on page load.
+ * Fetches data and renders initial charts and UI components.
+ */
 async function init() {
     await fetchResults();
     await fetchSummary();
-    
+
     if (resultsData.length > 0 && summaryData.length > 0) {
         updateKPIs();
         createGapChart();
@@ -503,7 +594,7 @@ async function init() {
         createOptimalChart();
         createRadarChart();
     }
-    
+
     loadExecutionPanel();
 }
 

@@ -1,10 +1,36 @@
+"""
+---
+Project: Bin Packing Algorithm Analysis
+Author: Andrés Cerdas Padilla
+GitHub: https://github.com/Andrescpyo
+
+Description:
+Local search algorithm for bin packing optimization.
+Implements a randomized First Fit Decreasing approach with iterative improvement.
+---
+
+Module: local_search
+"""
+
 import random
 
 from src.heuristics import first_fit
 
 
 def randomized_ffd(items, capacity):
+    """
+    Randomized First Fit Decreasing algorithm.
 
+    Sorts items in descending order, performs random swaps to introduce variation,
+    then applies First Fit. Used as a subroutine for the proposed method.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+
+    Returns:
+        list: List of bins, where each bin is a list of item sizes.
+    """
     items_copy = sorted(
         items,
         reverse=True
@@ -35,7 +61,21 @@ def proposed_method(
     capacity,
     iterations=1000
 ):
+    """
+    Proposed local search method for bin packing.
 
+    Iteratively applies randomized FFD and keeps the best solution found.
+    Uses randomization to escape local optima and explore the solution space.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+        iterations (int): Number of randomized FFD iterations to perform.
+                         Default is 1000.
+
+    Returns:
+        list: Best solution found (list of bins, where each bin is a list of item sizes).
+    """
     best_solution = None
     best_bins = float("inf")
 
