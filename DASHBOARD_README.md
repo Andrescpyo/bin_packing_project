@@ -1,98 +1,101 @@
 # Bin Packing Analysis Dashboard
 
-Interfaz visual moderna para el análisis de resultados de algoritmos de Bin Packing.
+Interactive web dashboard for visualizing and analyzing bin packing algorithm results.
 
-## Características
+**Author:** Andrés Cerdas Padilla
+**GitHub:** https://github.com/Andrescpyo
 
-- **Dashboard interactivo** con KPIs y gráficos en tiempo real
-- **Panel de ejecución** para correr experimentos personalizados
-- **Comparación de algoritmos** con visualizaciones detalladas
-- **Tabla de datos** con búsqueda, filtros y exportación
-- **Diseño responsive** con TailwindCSS
+## Features
 
-## Tecnologías Utilizadas
+- **Interactive Dashboard** with real-time KPIs and charts
+- **Execution Panel** for running custom experiments
+- **Algorithm Comparison** with detailed visualizations
+- **Data Table** with search, filters, and export functionality
+- **Responsive Design** using TailwindCSS
 
-- **Backend**: Flask (Python)
-- **Frontend**: HTML5 + TailwindCSS (vía CDN)
-- **Gráficos**: Chart.js (vía CDN)
-- **Procesamiento de datos**: Pandas
+## Technologies Used
 
-## Instalación
+- **Backend:** Flask (Python)
+- **Frontend:** HTML5 + TailwindCSS (via CDN)
+- **Charts:** Chart.js (via CDN)
+- **Data Processing:** Pandas
 
-1. Activar el entorno virtual:
+## Installation
+
+1. Activate virtual environment:
 ```powershell
 .\bpp_env\Scripts\activate
 ```
 
-2. Instalar Flask (si no está instalado):
+2. Install Flask (if not already installed):
 ```powershell
 pip install flask
 ```
 
-## Ejecución
+## Usage
 
-1. Iniciar el servidor:
+1. Start the server:
 ```powershell
 python app.py
 ```
 
-2. Abrir el navegador en:
+2. Open browser at:
 ```
 http://localhost:5000
 ```
 
-## Uso
+## Dashboard Sections
 
 ### Dashboard
-- Visualiza KPIs principales (mejor algoritmo, gap promedio, tiempo promedio, soluciones óptimas)
-- Gráficos de barras para gap y tiempo por algoritmo
-- Gráfico de radar para rendimiento multidimensional
+- View main KPIs (best algorithm, average gap, average time, optimal solutions)
+- Bar charts for gap and time by algorithm
+- Radar chart for multidimensional performance comparison
 
-### Ejecución
-- Selecciona las instancias que deseas procesar
-- Elige los algoritmos a ejecutar
-- Click en "Ejecutar" para correr los experimentos
-- Los resultados se actualizan automáticamente en el dashboard
+### Execution
+- Select instances to process
+- Choose algorithms to execute
+- Click "Ejecutar" to run experiments
+- Results automatically update in the dashboard
 
-### Comparación
-- Gráficos de líneas comparando gap y tiempo por instancia
-- Activa/desactiva series desde la leyenda del gráfico
+### Comparison
+- Line charts comparing gap and time across instances
+- Toggle series from chart legend
 
-### Datos
-- Tabla completa con todos los resultados
-- Búsqueda en tiempo real
-- Exportación a CSV
+### Data
+- Complete table with all results
+- Real-time search
+- CSV export
 
 ## API Endpoints
 
-- `GET /` - Interfaz web
-- `GET /api/results` - Resultados detallados
-- `GET /api/summary` - Resumen estadístico
-- `GET /api/instances` - Lista de instancias disponibles
-- `GET /api/algorithms` - Lista de algoritmos disponibles
-- `POST /api/run-experiments` - Ejecutar experimentos personalizados
+- `GET /` - Web interface
+- `GET /api/results` - Detailed results
+- `GET /api/summary` - Statistical summary
+- `GET /api/instances` - List of available instances
+- `GET /api/algorithms` - List of available algorithms
+- `POST /api/run-experiments` - Run custom experiments
 
-## Estructura de Archivos
+## File Structure
 
 ```
 bin_packing_project/
-├── app.py                      # Servidor Flask
+├── app.py                      # Flask server
 ├── static/
-│   ├── index.html              # Interfaz principal
-│   └── app.js                  # Lógica JavaScript
+│   ├── index.html              # Main interface
+│   └── app.js                  # JavaScript logic
 ├── src/
-│   ├── experiment.py          # Lógica de experimentos
-│   ├── heuristics.py           # Algoritmos de bin packing
-│   ├── local_search.py         # Búsqueda local
-│   └── instance_reader.py      # Lector de instancias
-├── data/                       # Archivos de instancias
-├── results/                    # Resultados generados
-└── main.py                     # Script original (sin modificar)
+│   ├── experiment.py          # Experiment logic
+│   ├── heuristics.py           # Bin packing algorithms
+│   ├── local_search.py         # Local search algorithm
+│   └── instance_reader.py      # Instance file reader
+├── data/                       # Instance files
+├── results/                    # Generated results
+└── main.py                     # Original script (unmodified)
 ```
 
-## Notas
+## Notes
 
-- No se modificó la lógica de los algoritmos
-- El backend original (main.py, experiment.py) permanece intacto
-- La interfaz es una capa adicional para visualización
-- Los resultados se guardan en `results/results.csv` y `summary.csv`
+- Algorithm logic remains unchanged
+- Original backend (main.py, experiment.py) is intact
+- Dashboard is an additional visualization layer
+- Results are saved to `results/results.csv` and `summary.csv`

@@ -1,4 +1,32 @@
+"""
+---
+Project: Bin Packing Algorithm Analysis
+Author: Andrés Cerdas Padilla
+GitHub: https://github.com/Andrescpyo
+
+Description:
+Classic bin packing heuristic algorithms.
+Implements Next Fit, First Fit, Best Fit, and First Fit Decreasing strategies.
+---
+
+Module: heuristics
+"""
+
+
 def next_fit(items, capacity):
+    """
+    Next Fit algorithm for bin packing.
+
+    Places each item in the current bin if it fits, otherwise closes the current
+    bin and opens a new one. Simple but often suboptimal.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+
+    Returns:
+        list: List of bins, where each bin is a list of item sizes.
+    """
     bins = []
     current_bin = []
     remaining = capacity
@@ -22,7 +50,19 @@ def next_fit(items, capacity):
 
 
 def first_fit(items, capacity):
+    """
+    First Fit algorithm for bin packing.
 
+    Places each item in the first bin that has enough remaining capacity.
+    If no existing bin can accommodate the item, opens a new bin.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+
+    Returns:
+        list: List of bins, where each bin is a list of item sizes.
+    """
     bins = []
 
     for item in items:
@@ -43,7 +83,19 @@ def first_fit(items, capacity):
 
 
 def best_fit(items, capacity):
+    """
+    Best Fit algorithm for bin packing.
 
+    Places each item in the bin that will have the least remaining space
+    after placement. Tends to produce better packing than First Fit.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+
+    Returns:
+        list: List of bins, where each bin is a list of item sizes.
+    """
     bins = []
 
     for item in items:
@@ -72,7 +124,19 @@ def best_fit(items, capacity):
 
 
 def first_fit_decreasing(items, capacity):
+    """
+    First Fit Decreasing algorithm for bin packing.
 
+    Sorts items in descending order before applying First Fit.
+    Sorting larger items first typically improves solution quality.
+
+    Args:
+        items (list): List of item sizes to pack.
+        capacity (int): Maximum capacity of each bin.
+
+    Returns:
+        list: List of bins, where each bin is a list of item sizes.
+    """
     sorted_items = sorted(items, reverse=True)
 
     return first_fit(sorted_items, capacity)

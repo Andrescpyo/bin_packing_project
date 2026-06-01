@@ -1,4 +1,19 @@
+"""
+---
+Project: Bin Packing Algorithm Analysis
+Author: Andrés Cerdas Padilla
+GitHub: https://github.com/Andrescpyo
+
+Description:
+Experiment runner module for bin packing algorithms.
+Executes multiple heuristics on benchmark instances and collects performance metrics.
+---
+
+Module: experiment
+"""
+
 import os
+import sys
 import time
 import pandas as pd
 
@@ -14,8 +29,34 @@ from src.heuristics import (
 from src.local_search import proposed_method
 
 
+def resource_path(relative_path):
+    """
+    Get absolute path to resource, works for development and PyInstaller.
+
+    Args:
+        relative_path (str): Relative path inside project.
+
+    Returns:
+        str: Absolute path to resource.
+    """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 def load_optimal_values():
-    """Load optimal values from Optimo.txt file."""
+    """
+    Load optimal values from Optimo.txt file.
+
+    Reads a tab-separated file containing instance names and their optimal bin counts.
+    Format: filename.txt<TAB>optimal_value
+
+    Returns:
+        dict: Mapping of filename to optimal bin count.
+    """
     optimal = {}
     try:
         with open(os.path.join("data", "Optimo.txt"), "r") as f:
@@ -43,7 +84,19 @@ ALGORITHMS = {
 
 
 def run_experiments():
+    """
+    Run all bin packing algorithms on defined instances.
 
+    For each instance in OPTIMAL, executes all algorithms and records:
+    - Number of bins used
+    - Execution time
+    - Gap percentage from optimal solution
+
+    Results are saved to results/results.csv and results/results.xlsx.
+
+    Returns:
+        pd.DataFrame: DataFrame containing results for all instances and algorithms.
+    """
     results = []
 
     for filename in OPTIMAL:
@@ -88,15 +141,16 @@ def run_experiments():
 
     df = pd.DataFrame(results)
 
-    os.makedirs("results", exist_ok=True)
+    results_folder = resource_path("results")
+    os.makedirs(results_folder, exist_ok=True)
 
     df.to_csv(
-        "results/results.csv",
+        os.path.join(results_folder, "results.csv"),
         index=False
     )
 
     df.to_excel(
-        "results/results.xlsx",
+        os.path.join(results_folder, "results.xlsx"),
         index=False
     )
 

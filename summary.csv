@@ -1,6 +1,0 @@
-Method,Avg Gap (%),Avg Time (s),Optimal Solutions
-NF,40.23,0.000245,0
-FF,1.37,0.038781,6
-BF,1.37,0.072841,6
-FFD,1.37,0.048756,6
-PROP,1.2,46.339871,11
