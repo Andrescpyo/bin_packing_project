@@ -59,7 +59,7 @@ def randomized_ffd(items, capacity):
 def proposed_method(
     items,
     capacity,
-    iterations=1000
+    iterations=500
 ):
     """
     Proposed local search method for bin packing.

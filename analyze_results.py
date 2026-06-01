@@ -12,7 +12,27 @@ Computes summary statistics and rankings for algorithm performance.
 Module: analyze_results
 """
 
+import os
+import sys
 import pandas as pd
+
+
+def resource_path(relative_path):
+    """
+    Get absolute path to resource, works for development and PyInstaller.
+
+    Args:
+        relative_path (str): Relative path inside project.
+
+    Returns:
+        str: Absolute path to resource.
+    """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def main():
@@ -28,7 +48,7 @@ def main():
         - Creates summary.csv file
     """
     try:
-        df = pd.read_csv("results\\results.csv")
+        df = pd.read_csv(os.path.join(resource_path("results"), "results.csv"))
 
     except FileNotFoundError:
         print("ERROR: No se encontró results.csv")
@@ -73,7 +93,7 @@ def main():
     print(summary_df.to_string(index=False))
 
     summary_df.to_csv(
-        "results/summary.csv",
+        os.path.join(resource_path("results"), "summary.csv"),
         index=False
     )
 

@@ -13,6 +13,7 @@ Module: experiment
 """
 
 import os
+import sys
 import time
 import pandas as pd
 
@@ -26,6 +27,24 @@ from src.heuristics import (
 )
 
 from src.local_search import proposed_method
+
+
+def resource_path(relative_path):
+    """
+    Get absolute path to resource, works for development and PyInstaller.
+
+    Args:
+        relative_path (str): Relative path inside project.
+
+    Returns:
+        str: Absolute path to resource.
+    """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def load_optimal_values():
@@ -122,15 +141,16 @@ def run_experiments():
 
     df = pd.DataFrame(results)
 
-    os.makedirs("results", exist_ok=True)
+    results_folder = resource_path("results")
+    os.makedirs(results_folder, exist_ok=True)
 
     df.to_csv(
-        "results/results.csv",
+        os.path.join(results_folder, "results.csv"),
         index=False
     )
 
     df.to_excel(
-        "results/results.xlsx",
+        os.path.join(results_folder, "results.xlsx"),
         index=False
     )
 
